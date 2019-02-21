@@ -17,7 +17,7 @@ def insert_status_changes_from(source_table, dest_table=mds.STATUS_CHANGES, on_c
         event_type_reason = cast(EXCLUDED.event_type_reason as event_type_reasons),
         event_location = cast(EXCLUDED.event_location as jsonb),
         battery_pct = EXCLUDED.battery_pct,
-        associated_trips = cast(EXCLUDED.associated_trips as uuid[])
+        associated_trip = cast(EXCLUDED.associated_trip as uuid)
     """
 
     return f"""
@@ -34,7 +34,7 @@ def insert_status_changes_from(source_table, dest_table=mds.STATUS_CHANGES, on_c
         event_time,
         event_location,
         battery_pct,
-        associated_trips
+        associated_trip
     )
     SELECT
         cast(provider_id as uuid),
@@ -48,7 +48,7 @@ def insert_status_changes_from(source_table, dest_table=mds.STATUS_CHANGES, on_c
         to_timestamp(event_time) at time zone 'UTC',
         cast(event_location as jsonb),
         battery_pct,
-        cast(associated_trips as uuid[])
+        cast(associated_trip as uuid)
     FROM "{source_table}"
     { conflict_update if on_conflict_update else __conflict_nothing }
     ;
