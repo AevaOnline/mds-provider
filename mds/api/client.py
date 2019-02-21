@@ -26,7 +26,7 @@ class ProviderClient(OAuthClientCredentialsAuth):
             - git tag
         """
         self.providers = providers if providers is not None else get_registry(ref)
-        self.encoder = CustomJsonEncoder()
+        self.encoder = CustomJsonEncoder(date_format="unix")
 
     def _auth_session(self, provider):
         """
