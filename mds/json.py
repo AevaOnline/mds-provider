@@ -123,7 +123,8 @@ class CustomJsonEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, datetime):
             if self.date_format == "unix":
-                return obj.timestamp()
+                # conform to the integer milliseconds spec.
+                return int(obj.timestamp()*1000)
             elif self.date_format == "iso8601":
                 return obj.isoformat()
             elif self.date_format is not None:
